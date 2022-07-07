@@ -3,7 +3,7 @@ from logging.config import dictConfig
 import requests
 from flask import Flask, Response, request
 
-import middleman
+import hook.middleman as middleman
 
 dictConfig(
     {
