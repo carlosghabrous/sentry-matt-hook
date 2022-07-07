@@ -16,11 +16,11 @@ def test_hello():
 
 
 def test_local_post_request_to_hook():
-    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"Content-type": "json","sentry-hook-resource":"error"}, json=local_request_json)   
+    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"sentry-hook-resource":"error"}, json=local_request_json)   
     assert x.status_code == 200
 
 
 def test_local_post_request_to_non_implemented_hook_returns_404():
-    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"Content-type": "json", "sentry-hook-resource":"issue"}, json=local_request_json)
+    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"sentry-hook-resource":"issue"}, json=local_request_json)
     assert x.status_code == 404
 
