@@ -39,6 +39,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     from . import api
+
     app.register_blueprint(api.bp)
 
     return app
