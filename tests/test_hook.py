@@ -1,16 +1,26 @@
+import pytest
 import requests
-import pytest 
 
-json_dummy_obj = {'somekey': 'somevalue'}
-API_ROUTE="/api/sentry/webhook"
+LOCAL_ADDR = "http://127.0.0.1:5000"
+API_ROUTE = "/sentry/webhook"
+
+local_request_json = {"action":"created", "data":"some data", "actor":{"type": "user",
+  "id": 2038298,
+  "name": "Carlos",
+}}
+
+
+def test_hello():
+    x = requests.get("http://127.0.0.1:5000/sentry/hello")
+    assert x.status_code == 200
+
 
 def test_local_post_request_to_hook():
-    x = requests.post("http://localhost:5001" + API_ROUTE, json=json_dummy_obj)
+    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"sentry-hook-resource":"error"}, json=local_request_json)   
     assert x.status_code == 200
 
 
-def test_ngrok_post_request_to_hook():
-    ngrok_url = 'https://85b8-178-237-233-8.eu.ngrok.io' + API_ROUTE
+def test_local_post_request_to_non_implemented_hook_returns_404():
+    x = requests.post(LOCAL_ADDR + API_ROUTE, headers={"sentry-hook-resource":"issue"}, json=local_request_json)
+    assert x.status_code == 404
 
-    x = requests.post(ngrok_url, json = json_dummy_obj)
-    assert x.status_code == 200
