@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 from typing import Any, Callable, Mapping
 
 import requests
@@ -27,7 +28,7 @@ def is_sentry_signature_correct(
     return True
 
 
-def handle_incoming(request):
+def handle_incoming(request: request) -> Response:
     raw_body = request.get_data()
     if not is_sentry_signature_correct(
         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
@@ -47,11 +48,11 @@ def handle_incoming(request):
     return handle_sentry_incoming(resource, action, data)
 
 
-def _handle_alert(resource, action, data) -> Response:
+def _handle_alert(resource:str, action:str, data) -> Response:
     return Response("", 200)
 
 
-def _handle_error(resource, action, data) -> Response:
+def _handle_error(resource:str, action:str, data) -> Response:
     response = requests.post(
         MATTERMOST_HOOK_URL,
         headers={"Content-type": "json"},
@@ -68,7 +69,7 @@ _sentry_handlers: dict[str, Callable] = {
 }
 
 
-def handle_sentry_incoming(resource, action, data) -> Response:
+def handle_sentry_incoming(resource:str, action:str, data) -> Response:
     try:
         return _sentry_handlers[resource](resource, action, data)
 
