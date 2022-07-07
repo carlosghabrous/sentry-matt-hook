@@ -28,7 +28,7 @@ def is_sentry_signature_correct(
     return True
 
 
-def handle_incoming(request: request) -> Response:
+def handle_incoming(request:request) -> Response:
     raw_body = request.get_data()
     if not is_sentry_signature_correct(
         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
@@ -48,17 +48,22 @@ def handle_incoming(request: request) -> Response:
     return handle_sentry_incoming(resource, action, data)
 
 
-def _handle_alert(resource:str, action:str, data) -> Response:
-    return Response("", 200)
-
-
-def _handle_error(resource:str, action:str, data) -> Response:
+def _handle_alert(resource:str, action:str, data:Mapping[str, Any]) -> Response:
+    #TODO: 
     response = requests.post(
         MATTERMOST_HOOK_URL,
         headers={"Content-type": "json"},
         json={"text": "Seriously, da house is burning. Do something"},
     )
     return response
+
+
+def _handle_error(resource:str, action:str, data:Mapping[str, Any]) -> Response:
+    # The error.created webhook has an immense volume since it triggers on each event in Sentry.
+    # If you're developing a public integration on SaaS, both you (the integration builder) and
+    # the user installing your integration will require at least a Business plan to use them.
+    # Keep this in mind while building on this webhook.
+    return Response("", 200)
 
 
 # We can specify other handlers though (comment, issue)
@@ -69,7 +74,7 @@ _sentry_handlers: dict[str, Callable] = {
 }
 
 
-def handle_sentry_incoming(resource:str, action:str, data) -> Response:
+def handle_sentry_incoming(resource:str, action:str, data:Mapping[str, Any]) -> Response:
     try:
         return _sentry_handlers[resource](resource, action, data)
 
