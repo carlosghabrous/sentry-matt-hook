@@ -2,11 +2,11 @@ from flask import Blueprint, Response, current_app, request
 
 import hook.middleman as middleman
 
-bp = Blueprint("api", __name__, url_prefix="/api")
+bp = Blueprint("api", __name__, url_prefix="/sentry")
 
 
-@bp.route("/sentry/webhook", methods=["POST"])
-def webhook_index() -> Response:
+@bp.route("/webhook", methods=["POST"])
+def webhook() -> Response:
     """Route that Sentry will use to send its event messages."""
 
     current_app.logger.info(f"received via webhook request: {request}")
@@ -19,4 +19,10 @@ def webhook_index() -> Response:
             "POST request to mattermost not successful", response.status_code
         )
 
+    return Response("OK", 200)
+
+
+@bp.route("/hello", methods=["GET"])
+def hello() -> Response:
+    """A quick test to know if the flask setup is working, since I don't know what I'm doing"""
     return Response("OK", 200)
