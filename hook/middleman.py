@@ -1,12 +1,9 @@
 import hashlib
 import hmac
-import json
 from typing import Any, Callable, Mapping
 
 import requests
-from flask import Response, request
-
-from flask import current_app
+from flask import Response, current_app, request
 
 # Incoming Mattermost hook for the PEAT's Eng Bot channel
 MATTERMOST_HOOK_URL = "https://chat.peat-cloud.com/hooks/56saw7x3yp888p361ssin67knr"
@@ -24,14 +21,14 @@ def is_sentry_signature_correct(
     ).hexdigest()
 
     if digest != expected:
-        #TODO: this should return False. Left it like this for test purposes only
+        # TODO: this should return False. Left it like this for test purposes only
         return True
 
     current_app.logger.info("Authorized: Verified request came from Sentry")
     return True
 
 
-def handle_incoming(request:request) -> Response:
+def handle_incoming(request: request) -> Response:
     """Entry point for Sentry events"""
 
     raw_body = request.get_data()
@@ -53,10 +50,9 @@ def handle_incoming(request:request) -> Response:
     return handle_sentry_incoming(resource, action, data)
 
 
-
-def _handle_issue_alert(data:Mapping[str, Any]) -> Response:
+def _handle_issue_alert(data: Mapping[str, Any]) -> Response:
     """Handles issue alerts"""
-    #TODO: eventually, some post request will have to be made to MM
+    # TODO: eventually, some post request will have to be made to MM
     # response = requests.post(
     #     MATTERMOST_HOOK_URL,
     #     headers={"Content-type": "json"},
@@ -65,9 +61,9 @@ def _handle_issue_alert(data:Mapping[str, Any]) -> Response:
     return Response("", 200)
 
 
-def _handle_metric_alert(data:Mapping[str, Any], action:s) -> Response:
+def _handle_metric_alert(data: Mapping[str, Any], action: s) -> Response:
     """Handles metric alerts"""
-    #TODO: eventually, some post request will have to be made to MM
+    # TODO: eventually, some post request will have to be made to MM
     # response = requests.post(
     #     MATTERMOST_HOOK_URL,
     #     headers={"Content-type": "json"},
@@ -76,7 +72,7 @@ def _handle_metric_alert(data:Mapping[str, Any], action:s) -> Response:
     return Response("", 200)
 
 
-def _handle_alert(resource:str, action:str, data:Mapping[str, Any]) -> Response:
+def _handle_alert(resource: str, action: str, data: Mapping[str, Any]) -> Response:
     """Handles all types of alerts"""
 
     # Issue Alerts (or Event Alerts) only have one type of action: 'triggered'
@@ -88,17 +84,16 @@ def _handle_alert(resource:str, action:str, data:Mapping[str, Any]) -> Response:
 
         if action not in ["resolved", "warning", "critical"]:
             current_app.logger.info(f"Unexpected Sentry metric alert action: {action}")
-            return Response('', 400)
-
+            return Response("", 400)
 
         return _handle_metric_alert(data, action)
-    
+
     # resource turns out to be something we do not manage
     current_app.logger.info(f"Unexpected Sentry resource: {resource}")
-    return Response('', 400)
+    return Response("", 400)
 
 
-def _handle_error(resource:str, action:str, data:Mapping[str, Any]) -> Response:
+def _handle_error(resource: str, action: str, data: Mapping[str, Any]) -> Response:
     """This is from the sentry documentation"""
     # The error.created webhook has an immense volume since it triggers on each event in Sentry.
     # If you're developing a public integration on SaaS, both you (the integration builder) and
@@ -115,7 +110,9 @@ _sentry_handlers: dict[str, Callable] = {
 }
 
 
-def handle_sentry_incoming(resource:str, action:str, data:Mapping[str, Any]) -> Response:
+def handle_sentry_incoming(
+    resource: str, action: str, data: Mapping[str, Any]
+) -> Response:
     """Assigns a handler for the type of incoming sentry resource"""
     try:
         return _sentry_handlers[resource](resource, action, data)
