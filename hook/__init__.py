@@ -2,6 +2,7 @@ from logging.config import dictConfig
 
 from flask import Flask
 
+# default logging configuration
 dictConfig(
     {
         "version": 1,
@@ -17,7 +18,7 @@ dictConfig(
                 "formatter": "default",
             }
         },
-        "root": {"level": "DEBUG", "handlers": ["wsgi"]},
+        "root": {"level": "INFO", "handlers": ["wsgi"]},
     }
 )
 
@@ -38,6 +39,6 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     from . import api
-
     app.register_blueprint(api.bp)
+
     return app
