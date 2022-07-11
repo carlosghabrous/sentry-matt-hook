@@ -11,7 +11,7 @@ def to_mattermost() -> Response:
 
     current_app.logger.info(f"received via webhook request: {request}")
 
-    response = middleman.handle_incoming(request)
+    response = middleman.handle_sentry_incoming(request)
 
     if response.status_code != 200:
         current_app.logger.warning(f"{response.status_code}: {response}")
