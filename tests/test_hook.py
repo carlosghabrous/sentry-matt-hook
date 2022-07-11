@@ -2,7 +2,7 @@ import pytest
 import requests
 
 LOCAL_ADDR = "http://127.0.0.1:5000"
-API_ROUTE = "/sentry/webhook"
+API_ROUTE = "/sentry/to-mattermost"
 
 local_request_json = {"action":"created", "data":"some data", "actor":{"type": "user",
   "id": 2038298,
