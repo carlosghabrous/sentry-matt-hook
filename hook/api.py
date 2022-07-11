@@ -5,8 +5,8 @@ import hook.middleman as middleman
 bp = Blueprint("api", __name__, url_prefix="/sentry")
 
 
-@bp.route("/webhook", methods=["POST"])
-def webhook() -> Response:
+@bp.route("/to-mattermost", methods=["POST"])
+def to_mattermost() -> Response:
     """Route that Sentry will use to send its event messages."""
 
     current_app.logger.info(f"received via webhook request: {request}")
