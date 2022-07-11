@@ -21,6 +21,7 @@ def is_sentry_signature_correct(
     ).hexdigest()
 
     if digest != expected:
+        current_app.logger.info("Not authorized: Verified request did not come from Sentry")
         # TODO: this should return False. Left it like this for test purposes only
         return True
 
