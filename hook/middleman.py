@@ -28,47 +28,47 @@ def is_sentry_signature_correct(
     return True
 
 
-def handle_incoming(request: request) -> Response:
-    """Entry point for Sentry events"""
+# def handle_incoming(request: request) -> Response:
+#     """Entry point for Sentry events"""
 
-    raw_body = request.get_data()
-    if not is_sentry_signature_correct(
-        raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
-    ):
-        return Response("", 401)
+#     raw_body = request.get_data()
+#     if not is_sentry_signature_correct(
+#         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
+#     ):
+#         return Response("", 401)
 
-    action = request.json.get("action")
-    data = request.json.get("data")
-    actor = request.json.get("actor")
-    resource = request.headers.get("sentry-hook-resource")
+#     action = request.json.get("action")
+#     data = request.json.get("data")
+#     actor = request.json.get("actor")
+#     resource = request.headers.get("sentry-hook-resource")
 
-    if not (resource and action and data):
-        return Response("Missing fields in JSON", 400)
+#     if not (resource and action and data):
+#         return Response("Missing fields in JSON", 400)
 
-    current_app.logger.info(f"Received '{resource}.{action}' webhook from Sentry")
+#     current_app.logger.info(f"Received '{resource}.{action}' webhook from Sentry")
 
-    return handle_sentry_incoming(resource, action, data)
+#     return handle_sentry_incoming(resource, action, data)
 
 
 def _handle_issue_alert(data: Mapping[str, Any]) -> Response:
     """Handles issue alerts"""
     # TODO: eventually, some post request will have to be made to MM
-    # response = requests.post(
-    #     MATTERMOST_HOOK_URL,
-    #     headers={"Content-type": "json"},
-    #     json={"text": "Seriously, da house is burning. Do something"},
-    # )
+    response = requests.post(
+        MATTERMOST_HOOK_URL,
+        headers={"Content-type": "json"},
+        json={"text": "issue alert"},
+    )
     return Response("", 200)
 
 
-def _handle_metric_alert(data: Mapping[str, Any], action: s) -> Response:
+def _handle_metric_alert(data: Mapping[str, Any], action: str) -> Response:
     """Handles metric alerts"""
     # TODO: eventually, some post request will have to be made to MM
-    # response = requests.post(
-    #     MATTERMOST_HOOK_URL,
-    #     headers={"Content-type": "json"},
-    #     json={"text": "Seriously, da house is burning. Do something"},
-    # )
+    response = requests.post(
+        MATTERMOST_HOOK_URL,
+        headers={"Content-type": "json"},
+        json={"text": "metric alert"},
+    )
     return Response("", 200)
 
 
@@ -99,6 +99,11 @@ def _handle_error(resource: str, action: str, data: Mapping[str, Any]) -> Respon
     # If you're developing a public integration on SaaS, both you (the integration builder) and
     # the user installing your integration will require at least a Business plan to use them.
     # Keep this in mind while building on this webhook.
+    response = requests.post(
+        MATTERMOST_HOOK_URL,
+        headers={"Content-type": "json"},
+        json={"text": "error"},
+    )
     return Response("", 200)
 
 
