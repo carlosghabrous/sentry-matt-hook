@@ -102,9 +102,11 @@ _sentry_handlers = {
 def handle_sentry_incoming() -> Response:
     """Assigns a handler for the type of incoming sentry resource"""
 
-    current_app.logger.info(f"received via webhook request: {request}")
+    current_app.logger.info(f"received via webhook request: {request}, attributes {dir(request)}")
 
     raw_body = request.get_data()
+    current_app.logger.info(f"got raw_body: {raw_body}")
+    
     if not is_sentry_signature_correct(
         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
     ):
