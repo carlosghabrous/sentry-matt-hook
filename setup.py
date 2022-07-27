@@ -17,6 +17,7 @@ with (HERE / "README.md").open("rt") as fh:
 REQUIREMENTS: dict = {
     "core": [
         "Flask==2.0.3",
+        "requests==2.27.1",
         # "mandatory-requirement1",
         # "mandatory-requirement2",
     ],
