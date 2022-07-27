@@ -91,7 +91,7 @@ def _handle_error(resource: str, action: str, data: Mapping[str, Any]) -> Respon
 
 
 # We can specify other handlers though (comment, issue)
-_sentry_handlers: dict[str, Callable] = {
+_sentry_handlers = {
     "event_alert": _handle_alert,
     "metric_alert": _handle_alert,
     "error": _handle_error,
