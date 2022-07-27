@@ -106,15 +106,15 @@ def handle_sentry_incoming() -> Response:
 
     raw_body = request.get_data()
     current_app.logger.info(f"got raw_body: {raw_body}")
-    
+
     if not is_sentry_signature_correct(
         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
     ):
         return Response("", 401)
 
-    action = request.json.get("action")
-    data = request.json.get("data")
-    actor = request.json.get("actor")
+    action = request.get_json("action")
+    data = request.get_json("data")
+    actor = request.get_json("actor")
     resource = request.headers.get("sentry-hook-resource")
 
     if not (resource and action and data):
