@@ -1,7 +1,8 @@
-from flask import Blueprint, Response, current_app, request
+from flask import Blueprint, Flask, Response, current_app, request
 
 import hook.middleman as middleman
 
+app = Flask(__name__)
 bp = Blueprint("api", __name__, url_prefix="/sentry")
 
 
@@ -26,3 +27,7 @@ def to_mattermost() -> Response:
 def hello() -> Response:
     """A quick test to know if the flask setup is working, since I don't know what I'm doing"""
     return Response("OK", 200)
+
+
+if __name__ == "__main__":
+    app.run()
