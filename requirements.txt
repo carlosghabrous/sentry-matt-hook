@@ -1,11 +1,18 @@
+certifi==2022.6.15
+charset-normalizer==2.0.12
 click==8.0.4
 dataclasses==0.8
 Flask==2.0.3
+gunicorn==20.1.0
+idna==3.3
 importlib-metadata==4.8.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
+-e git+git@github.com:carlosghabrous/sentry-matt-hook.git@45d466cd2b6232e87763ea6f7ff8d4f14f4d288f#egg=middleman
 pkg-resources==0.0.0
+requests==2.27.1
 typing-extensions==4.1.1
+urllib3==1.26.11
 Werkzeug==2.0.3
 zipp==3.6.0
