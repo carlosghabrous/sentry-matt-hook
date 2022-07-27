@@ -111,19 +111,22 @@ def handle_sentry_incoming() -> Response:
     ):
         return Response("", 401)
 
-    current_app.logger.info(f"before getting stuff from request")
-    action = request.get_json("action")
-    current_app.logger.info(f"got action: {action}")
-    data = request.get_json("data")
-    current_app.logger.info(f"got data: {data}")
-    actor = request.get_json("actor")
-    current_app.logger.info(f"got actor: {actor}")
+    action = request.get_json().get("action")
+    data = request.get_json().get("data")
+    actor = request.get_json().get("actor")
     resource = request.headers.get("sentry-hook-resource")
-    current_app.logger.info(f"got resource: {resource}")
 
+    current_app.logger.info(f"action {action}, data:{data}, actor:{actor}, resource:{resource}")
 
-    if not (resource and action and data):
-        return Response("Missing fields in JSON", 400)
+    if not resource: 
+        return Response("Missing header 'sentry-hook-resource'", 400)
+
+    if not action:
+        return Response("Missing field 'action' in request body", 400)
+
+    if not data:
+        return Response("Missing field 'data' in request body", 400)
+        
 
     current_app.logger.info(f"Received '{resource}.{action}' webhook from Sentry")
 
