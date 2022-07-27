@@ -98,7 +98,7 @@ _sentry_handlers = {
 }
 
 
-@bp.route("/to-mattermost", methods=["POST"])
+@middleman_blueprint.route("/to-mattermost", methods=["POST"])
 def handle_sentry_incoming() -> Response:
     """Assigns a handler for the type of incoming sentry resource"""
 
