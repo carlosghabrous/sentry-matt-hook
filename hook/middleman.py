@@ -25,8 +25,8 @@ def is_sentry_signature_correct(
     ).hexdigest()
 
     if digest != expected:
-        current_app.logger.info("Not authorized: Verified request did not come from Sentry")
-        # TODO: this should return False. Left it like this for test purposes only
+        # TODO: log + this should return False. Left it like this for test purposes only
+        # current_app.logger.info("Not authorized: Verified request did not come from Sentry")
         return True
 
     current_app.logger.info("Authorized: Verified request came from Sentry")
@@ -111,12 +111,16 @@ def handle_sentry_incoming() -> Response:
     ):
         return Response("", 401)
 
+    current_app.logger.info(f"before getting stuff from request")
     action = request.get_json("action")
+    current_app.logger.info(f"got action: {action}")
     data = request.get_json("data")
+    current_app.logger.info(f"got data: {data}")
     actor = request.get_json("actor")
+    current_app.logger.info(f"got actor: {actor}")
     resource = request.headers.get("sentry-hook-resource")
+    current_app.logger.info(f"got resource: {resource}")
 
-    current_app.logger.info(f"got action data actor and resource")
 
     if not (resource and action and data):
         return Response("Missing fields in JSON", 400)
