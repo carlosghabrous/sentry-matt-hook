@@ -3,10 +3,14 @@ import hmac
 from typing import Any, Callable, Mapping
 
 import requests
-from flask import Response, current_app, request
+from flask import Blueprint, Response, current_app, request
+
+# Create blueprint to organize the code
+bp = Blueprint("api", __name__, url_prefix="/sentry")
 
 # Incoming Mattermost hook for the PEAT's Eng Bot channel
 MATTERMOST_HOOK_URL = "https://chat.peat-cloud.com/hooks/56saw7x3yp888p361ssin67knr"
+
 # TODO: get this from .env file
 SENTRY_CLIENT_SECRET = ""
 
@@ -94,9 +98,12 @@ _sentry_handlers: dict[str, Callable] = {
 }
 
 
-def handle_sentry_incoming(request: "request") -> Response:
+@bp.route("/to-mattermost", methods=["POST"])
+def handle_sentry_incoming() -> Response:
     """Assigns a handler for the type of incoming sentry resource"""
 
+    current_app.logger.info(f"received via webhook request: {request}")
+    
     raw_body = request.get_data()
     if not is_sentry_signature_correct(
         raw_body, SENTRY_CLIENT_SECRET, request.headers.get("sentry-hook-signature")
