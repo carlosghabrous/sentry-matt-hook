@@ -9,7 +9,7 @@ importlib-metadata==4.8.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
--e git+git@github.com:carlosghabrous/sentry-matt-hook.git@45d466cd2b6232e87763ea6f7ff8d4f14f4d288f#egg=middleman
+-e git+git@github.com:carlosghabrous/sentry-matt-hook.git@9e439e84afd431722b3b2020a41065eb9a6d119c#egg=middleman
 pkg-resources==0.0.0
 requests==2.27.1
 typing-extensions==4.1.1
