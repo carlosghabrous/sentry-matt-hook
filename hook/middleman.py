@@ -6,7 +6,7 @@ import requests
 from flask import Blueprint, Response, current_app, request
 
 # Create blueprint to organize the code
-bp = Blueprint("middleman", __name__, url_prefix="/sentry")
+middleman_blueprint = Blueprint("middleman", __name__, url_prefix="/sentry")
 
 # Incoming Mattermost hook for the PEAT's Eng Bot channel
 MATTERMOST_HOOK_URL = "https://chat.peat-cloud.com/hooks/56saw7x3yp888p361ssin67knr"

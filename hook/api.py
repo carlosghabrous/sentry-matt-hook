@@ -1,9 +1,9 @@
-from flask import Flask, Response, current_app, request
+from flask import Flask, Response
 
-from hook.middleman import bp
+from hook.middleman import middleman_blueprint
 
 app = Flask(__name__)
-app.register_blueprint(bp)
+app.register_blueprint(middleman_blueprint)
 
 
 @app.route("/hello", methods=["GET"])
